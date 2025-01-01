@@ -5,7 +5,9 @@ import { formatDateTime } from '@/lib/utils';
 import { SearchParamProps } from '@/types';
 import Image from 'next/image';
 
-export default async function EventDetails({ params, searchParams }: SearchParamProps) {
+export default async function EventDetails(props: SearchParamProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { id } = params;  // Destructure 'id' from params
 
   const event = await getEventById(id);

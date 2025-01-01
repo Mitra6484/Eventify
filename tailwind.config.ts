@@ -20,9 +20,9 @@ module.exports = withUt({
     extend: {
       colors: {
         primary: {
-          500: '#624CF5',
-          50: ' #F6F8FD',
-          DEFAULT: '#624CF5',
+          500: '#00BFFF', // Skyblue color
+          50: '#E0F7FF',  // Light skyblue for a subtle tone
+          DEFAULT: '#00BFFF', // Skyblue color
           foreground: 'hsl(var(--primary-foreground))',
         },
         coral: {

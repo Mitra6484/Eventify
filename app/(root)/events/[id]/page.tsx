@@ -1,44 +1,22 @@
-import type { Metadata, ResolvingMetadata } from 'next';
-import Image from 'next/image';
 import CheckoutButton from '@/components/shared/CheckoutButton';
 import Collection from '@/components/shared/Collection';
 import { getEventById, getRelatedEventsByCategory } from '@/lib/actions/event.actions';
 import { formatDateTime } from '@/lib/utils';
+import { SearchParamProps } from '@/types';
+import Image from 'next/image';
 
-// Define the Props type as per the new structure
-type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const { id } = params;
-
-  const event = await getEventById(id);
-
-  const previousImages = (await parent).openGraph?.images || [];
-
-  return {
-    title: event.title,
-    openGraph: {
-      images: [event.imageUrl, ...previousImages],
-    },
-  };
-}
-
-export default async function EventDetails({ params, searchParams }: Props) {
-  const { id } = params;
+export default async function EventDetails({ params, searchParams }: SearchParamProps) {
+  // Since params is expected to be a promise, we need to await it
+  const { id } = await params; // Await the promise to get the id
 
   const event = await getEventById(id);
 
   const relatedEvents = await getRelatedEventsByCategory({
     categoryId: event.category._id,
     eventId: event._id,
-    page: searchParams.page as string,
+    page: event.page as string,
   });
+
 
   return (
     <>
@@ -119,7 +97,7 @@ export default async function EventDetails({ params, searchParams }: Props) {
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={3}
-          page={searchParams.page as string}
+          page={event.page as string}
           totalPages={relatedEvents?.totalPages}
         />
       </section>
